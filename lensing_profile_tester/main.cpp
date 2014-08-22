@@ -34,7 +34,7 @@ int main( const int argc, const char *argv[] )
 	const brgastro::lensing_tNFW_profile group_profile(M_group,z);
 
 	// Generate set of input points, and each lensing signal
-	std::vector< std::vector<std::string> > data(6);
+	std::vector< std::vector<std::string> > data(7);
 	for(double R=10*unitconv::kpctom; R <= 2000.*unitconv::kpctom; R += 10*unitconv::kpctom)
 	{
 		std::stringstream ss;
@@ -46,7 +46,7 @@ int main( const int argc, const char *argv[] )
 		ss << satellite_profile.quick_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
 		data[2].push_back(ss.str());
 		ss.str("");
-		ss << group_profile.offset_WLsig(R,offset_R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
+		ss << group_profile.shifted_WLsig(R,offset_R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
 		data[3].push_back(ss.str());
 		ss.str("");
 		ss << group_profile.quick_offset_WLsig(R,offset_R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
@@ -54,20 +54,25 @@ int main( const int argc, const char *argv[] )
 		ss.str("");
 		ss << group_profile.quick_group_WLsig(R, group_c)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
 		data[5].push_back(ss.str());
+		ss.str("");
+		ss << group_profile.quick_shifted_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtokpc));
+		data[6].push_back(ss.str());
 	}
 
 	std::vector< std::string > header;
 	header.push_back("#");
 	header.push_back("R");
 	header.push_back("Sat_sig");
-	header.push_back("Offset_group_sig_noncache");
+	header.push_back("Shifted_group_sig_noncache");
 	header.push_back("Offset_group_sig");
 	header.push_back("Averaged_group_sig");
+	header.push_back("Shifted_group_sig");
 
 	std::string cache_test_name = "tNFW_cache_test.dat";
 	std::string sig_cache_name = "sig_cache.dat";
 	std::string offset_sig_cache_name = "offset_sig_cache.dat";
 	std::string group_sig_cache_name = "group_sig_cache.dat";
+	std::string shifted_sig_cache_name = "shifted_sig_cache.dat";
 
 	std::ofstream out;
 
@@ -82,6 +87,9 @@ int main( const int argc, const char *argv[] )
 
 	brgastro::open_file(out,group_sig_cache_name);
 	brgastro::tNFW_group_sig_cache().print(out);
+
+	brgastro::open_file(out,shifted_sig_cache_name);
+	brgastro::tNFW_shifted_sig_cache().print(out);
 
 	return 0;
 }
