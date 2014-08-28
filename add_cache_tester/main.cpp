@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "brg/brg_astro.h"
+#include "brg/brg_file_functions.h"
 #include "brg/brg_vector.hpp"
 
 
@@ -74,7 +75,7 @@ int main( const int argc, const char *argv[] )
 		}
 	}
 
-	brgastro::print_table(std::cout,data.size(),data[0].size(), data);
+	brgastro::print_table(std::cout,data);
 
 	return 0;
 }
