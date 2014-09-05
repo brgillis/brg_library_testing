@@ -12,9 +12,9 @@
 #include <string>
 #include <sstream>
 
-#include "brg/brg_astro.h"
-#include "brg/brg_file_functions.h"
-#include "brg/brg_vector.hpp"
+#include "brg/physics/astro.h"
+#include "brg/file_functions.h"
+#include "brg/vector/vector.hpp"
 
 
 int main( const int argc, const char *argv[] )

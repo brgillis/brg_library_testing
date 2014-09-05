@@ -13,14 +13,15 @@
 #include <sstream>
 #include <vector>
 
-#include "brg/density_profile/lensing/lensing_tNFW_profile.h"
-#include "brg/density_profile/lensing/lensing_tNFW_caches.h"
-#include "brg/brg_file_functions.h"
-#include "brg/brg_misc_functions.hpp"
-#include "brg/brg_units.h"
+#include "brg/physics/density_profile/lensing/lensing_tNFW_profile.h"
+#include "brg/physics/density_profile/lensing/lensing_tNFW_caches.h"
+#include "brg/file_functions.h"
+#include "brg/physics/units/unit_conversions.hpp"
 
 int main( const int argc, const char *argv[] )
 {
+	namespace unitconv = brgastro::unitconv;
+
 	// Redshift
 	const double z = 0.303;
 
@@ -44,10 +45,10 @@ int main( const int argc, const char *argv[] )
 		ss << std::setprecision(4) << R*unitconv::mtokpc;
 		data[1].push_back(ss.str());
 		ss.str("");
-		ss << std::setprecision(15) << satellite_profile.quick_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
+		ss << std::setprecision(15) << group_profile.quick_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
 		data[2].push_back(ss.str());
 		ss.str("");
-		ss << std::setprecision(15) << satellite_profile.WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
+		ss << std::setprecision(15) << group_profile.WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
 		data[3].push_back(ss.str());
 		ss.str("");
 		ss << std::setprecision(15) << group_profile.quick_offset_WLsig(R,offset_R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
@@ -62,10 +63,10 @@ int main( const int argc, const char *argv[] )
 		ss << std::setprecision(15) << group_profile.semiquick_group_WLsig(R, group_c)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
 		data[7].push_back(ss.str());
 		ss.str("");
-		ss << std::setprecision(15) << satellite_profile.quick_shifted_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
+		ss << std::setprecision(15) << group_profile.quick_shifted_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
 		data[8].push_back(ss.str());
 		ss.str("");
-		ss << std::setprecision(15) << satellite_profile.shifted_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
+		ss << std::setprecision(15) << group_profile.shifted_WLsig(R)*unitconv::kgtoMsun/(brgastro::square(unitconv::mtopc));
 		data[9].push_back(ss.str());
 	}
 
