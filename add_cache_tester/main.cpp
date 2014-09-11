@@ -12,8 +12,10 @@
 #include <string>
 #include <sstream>
 
+#include <boost/spirit/home/support/detail/hold_any.hpp>
+
 #include "brg/physics/astro.h"
-#include "brg/file_functions.h"
+#include "brg/file_access/ascii_table.h"
 #include "brg/vector/vector.hpp"
 
 
@@ -43,22 +45,17 @@ int main( const int argc, const char *argv[] )
 		}
 	}
 
-	std::vector< std::vector<std::string> > data(z1.size()+1);
+	std::vector< std::vector<boost::spirit::hold_any> > data(z1.size()+1);
 	for(size_t i=0; i<data.size(); ++i) data[i].resize(z2.size()+1);
 
-	std::stringstream ss;
-	data[0][0] = "";
+	data[0][0] = std::string("");
 	for(size_t i=1;i<data.size();++i)
 	{
-		ss.str("");
-		ss << z1[i-1];
-		data[i][0] = ss.str();
+		data[i][0] = z1[i-1];
 	}
 	for(size_t i=1;i<data[0].size();++i)
 	{
-		ss.str("");
-		ss << z2[i-1];
-		data[0][i] = ss.str();
+		data[0][i] = z2[i-1];
 	}
 
 
@@ -69,9 +66,7 @@ int main( const int argc, const char *argv[] )
 			brgastro::vector<double>::shape_t position;
 			position.push_back(z1_i-1);
 			position.push_back(z2_i-1);
-			ss.str("");
-			ss << results.at(position);
-			data[z1_i][z2_i] = ss.str();
+			data[z1_i][z2_i] = results.at(position);
 		}
 	}
 
