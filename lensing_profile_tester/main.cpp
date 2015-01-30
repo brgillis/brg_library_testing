@@ -13,10 +13,11 @@
 #include <sstream>
 #include <vector>
 
-#include "brg/physics/density_profile/lensing/lensing_tNFW_profile.h"
-#include "brg/physics/density_profile/lensing/lensing_tNFW_caches.h"
-#include "brg/file_functions.h"
-#include "brg/physics/units/unit_conversions.hpp"
+#include "brg/file_access/ascii_table_map.hpp"
+#include "brg/file_access/open_file.hpp"
+#include "brg_lensing/lensing_tNFW_profile.h"
+#include "brg_lensing/lensing_tNFW_caches.h"
+#include "brg_physics/units/unit_conversions.hpp"
 
 int main( const int argc, const char *argv[] )
 {
