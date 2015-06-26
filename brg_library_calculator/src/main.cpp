@@ -26,8 +26,12 @@
 #include <cmath>
 #include <iostream>
 
-#include "brg_physics/density_profile/tNFW_profile.h"
-#include "brg_physics/units/unit_conversions.hpp"
+#include "brg_physics/astro.h"
+#include "brg_lensing/lensing_tNFW_profile.h"
+
+#include "brg/math/calculus/integrate.hpp"
+#include "brg/units/unit_conversions.hpp"
+#include "brg/units/units.hpp"
 
 /**
  * TODO (description)
@@ -37,18 +41,30 @@
  */
 int main( const int argc, const char *argv[] )
 {
-	constexpr double M0 = std::pow(10,10.1)*brgastro::unitconv::Msuntokg;
-	constexpr double z = 0;
-	constexpr double R = 6.55*brgastro::unitconv::kpctom;
+	using namespace brgastro;
 
-	brgastro::tNFW_profile prof(M0,z);
+	const mass_type M0 = ipow<14>(10.)*unitconv::Msuntokg*kg;
+	const double z = 0;
 
-	auto tot_mass = prof.mtot();
-	auto vir_mass = prof.mvir();
-	auto cont_mass = prof.enc_mass(R);
+	lensing_tNFW_profile mass_prof(M0,z);
+	lensing_tNFW_profile sat_prof(M0,z,2.5);
 
-	std::cout << "Fraction of virial mass contained: " << cont_mass/vir_mass << std::endl;
-	std::cout << "Fraction of total mass contained: " << cont_mass/tot_mass << std::endl;
-	
+	const distance_type R_max = mass_prof.rvir();
+
+	auto sat_dens = [&] (const distance_type & r)
+	{
+		return value_of(4.*pi*r*r * sat_prof.dens(r));
+	};
+
+	auto host_dens = [&] (const distance_type & r)
+	{
+		return mass_prof.dens(r);
+	};
+
+	const auto mean_overdens = brgastro::integrate_weighted_Romberg(host_dens,sat_dens,0.01*R_max,2.5*R_max);
+	const auto background_dens = brgastro::redshift_obj(0).rho_crit();
+
+	std::cout << "Mean overdensity where satellites are is: " << mean_overdens/background_dens << std::endl;
+
 	return 0;
 }

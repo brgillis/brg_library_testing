@@ -41,10 +41,15 @@
 int main( const int argc, const char *argv[] )
 {
 	
-	brgastro::labeled_array<double,Eigen::RowMajor> test_array;
 
-	test_array.insert_col(std::vector<double>({1,2}));
-	test_array.insert_col(std::vector<double>({4,5}));
+	std::vector<std::vector<double>> rows;
+	rows.push_back(std::vector<double>({1,4}));
+	rows.push_back(std::vector<double>({2,5}));
+
+	std::vector<std::string> header({"col_A","col_2"});
+
+	brgastro::labeled_array<double,Eigen::RowMajor> test_array(rows,header);
+
 	test_array.insert_row(std::vector<double>({3,6}));
 	test_array.insert_col(std::vector<double>({7,8,9}));
 	test_array.insert_col(std::vector<double>({10,11,12}));

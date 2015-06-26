@@ -14,9 +14,9 @@
 
 #include <boost/spirit/home/support/detail/hold_any.hpp>
 
-#include "brg/physics/astro.h"
-#include "brg/file_access/ascii_table.h"
-#include "brg/vector/vector.hpp"
+#include "brg_physics/astro.h"
+#include "brg/file_access/ascii_table.hpp"
+#include "brg/vector/multi_vector.hpp"
 
 
 int main( const int argc, const char *argv[] )
