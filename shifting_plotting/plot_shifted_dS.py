@@ -206,6 +206,7 @@ def main(**kwargs):
                          label="Shifting")
             ax.set_xlim(kwargs['xmin'],kwargs['xmax'])
             ax.set_ylim(kwargs['ymin'],kwargs['ymax'])
+            ax.yaxis.get_major_formatter().set_powerlimits((0, 1))
             
             # Label the redshift and mass
             xmin = 0.

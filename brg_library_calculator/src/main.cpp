@@ -26,12 +26,15 @@
 #include <cmath>
 #include <iostream>
 
-#include "brg_physics/astro.h"
-#include "brg_lensing/lensing_tNFW_profile.h"
+#include "IceBRG_physics/astro.h"
+#include "IceBRG_lensing/lensing_tNFW_profile.h"
 
-#include "brg/math/calculus/integrate.hpp"
-#include "brg/units/unit_conversions.hpp"
-#include "brg/units/units.hpp"
+#include "IceBRG_lensing/pair_binner.h"
+//#include "IceBRG_physics/sky_obj/galaxy.h"
+
+#include "IceBRG_main/math/calculus/integrate.hpp"
+#include "IceBRG_main/units/unit_conversions.hpp"
+#include "IceBRG_main/units/units.hpp"
 
 /**
  * TODO (description)
@@ -41,9 +44,15 @@
  */
 int main( const int argc, const char *argv[] )
 {
-	using namespace brgastro;
+	using namespace IceBRG;
 
-	const mass_type M0 = ipow<14>(10.)*unitconv::Msuntokg*kg;
+//	galaxy bl;
+//
+//	skydist2d(&bl,&bl);
+
+	pair_binner();
+
+	const mass_type M0 = runtime_ipow(10.,14)*unitconv::Msuntokg*kg;
 	const double z = 0;
 
 	lensing_tNFW_profile mass_prof(M0,z);
@@ -61,8 +70,8 @@ int main( const int argc, const char *argv[] )
 		return mass_prof.dens(r);
 	};
 
-	const auto mean_overdens = brgastro::integrate_weighted_Romberg(host_dens,sat_dens,0.01*R_max,2.5*R_max);
-	const auto background_dens = brgastro::redshift_obj(0).rho_crit();
+	const auto mean_overdens = IceBRG::integrate_weighted_Romberg(host_dens,sat_dens,0.01*R_max,2.5*R_max);
+	const auto background_dens = IceBRG::redshift_obj(0).rho_crit();
 
 	std::cout << "Mean overdensity where satellites are is: " << mean_overdens/background_dens << std::endl;
 

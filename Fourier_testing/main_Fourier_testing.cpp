@@ -11,10 +11,10 @@
 #include <boost/optional.hpp>
 #include <Eigen/Core>
 
-#include <brg/container/labeled_array.hpp>
-#include <brg/math/Fourier/transform.hpp>
-#include <brg/math/Fourier/radial_vector.hpp>
-#include <brg/math/random/distributions.hpp>
+#include "IceBRG_main/container/labeled_array.hpp"
+#include "IceBRG_main/math/Fourier/transform.hpp"
+#include "IceBRG_main/math/Fourier/radial_vector.hpp"
+#include "IceBRG_main/math/random/distributions.hpp"
 
 
 int main( const int argc, const char *argv[] )
@@ -33,14 +33,14 @@ int main( const int argc, const char *argv[] )
 
 	std::cout << "N = " << N << ". scale = " << scale << ". function_scale = " << function_scale << "." << std::endl;
 
-	brgastro::labeled_array<double> result_array;
+	IceBRG::labeled_array<double> result_array;
 
-	brgastro::fftw_wisdom_accumulator wisdom;
+	IceBRG::fftw_wisdom_accumulator wisdom;
 
 	auto get_Gaus = [&function_scale] (const double & val)
-			{return brgastro::Gaus_pdf(val,0,function_scale);};
+			{return IceBRG::Gaus_pdf(val,0,function_scale);};
 	auto get_Gaus_rt2 = [&function_scale] (const double & val)
-			{return brgastro::Gaus_pdf(val,0,function_scale*std::sqrt(2.));};
+			{return IceBRG::Gaus_pdf(val,0,function_scale*std::sqrt(2.));};
 
 	auto get_tophat = [&function_scale] (const double & val)
 	{
@@ -49,14 +49,14 @@ int main( const int argc, const char *argv[] )
 	};
 
 	auto get_spherical_Gaus = [&function_scale] (const double & val)
-			{return brgastro::spherical_Gaus_pdf(val,function_scale);};
+			{return IceBRG::spherical_Gaus_pdf(val,function_scale);};
 	auto get_spherical_Gaus_rt2 = [&function_scale] (const double & val)
-			{return brgastro::spherical_Gaus_pdf(val,function_scale*std::sqrt(2.));};
+			{return IceBRG::spherical_Gaus_pdf(val,function_scale*std::sqrt(2.));};
 
 	auto get_spherical_tophat = [&function_scale] (const double & val)
 	{
 		if(std::fabs(val)>function_scale) return 0.;
-		return 3./(4.*M_PI*brgastro::cube(function_scale));
+		return 3./(4.*M_PI*IceBRG::cube(function_scale));
 	};
 
 	Eigen::ArrayXd x_vals = Eigen::ArrayXd::LinSpaced(N,-scale,scale);
@@ -69,15 +69,15 @@ int main( const int argc, const char *argv[] )
 	result_array.insert_col(std::make_pair("linear_input_tophat_vals",linear_input_tophat_vals));
 	result_array.insert_col(std::make_pair("expected_linear_convolved_Gaussian_vals",expected_linear_convolved_Gaussian_vals));
 
-	auto linear_Gaussian_k_vals = brgastro::Fourier_transform(linear_input_Gaussian_vals,wisdom);
-	auto linear_tophat_k_vals = brgastro::Fourier_transform(linear_input_tophat_vals,wisdom);
+	auto linear_Gaussian_k_vals = IceBRG::Fourier_transform(linear_input_Gaussian_vals,wisdom);
+	auto linear_tophat_k_vals = IceBRG::Fourier_transform(linear_input_tophat_vals,wisdom);
 
-	Eigen::ArrayXd linear_recovered_convolved_Gaussian_vals = brgastro::inverse_Fourier_transform(
-			static_cast<brgastro::complex_array_type>(linear_Gaussian_k_vals*linear_Gaussian_k_vals*2/N),
+	Eigen::ArrayXd linear_recovered_convolved_Gaussian_vals = IceBRG::inverse_Fourier_transform(
+			static_cast<IceBRG::complex_array_type>(linear_Gaussian_k_vals*linear_Gaussian_k_vals*2/N),
 			wisdom)*scale;
 
-	Eigen::ArrayXd linear_recovered_convolved_tophat_vals = brgastro::inverse_Fourier_transform(
-			static_cast<brgastro::complex_array_type>(linear_tophat_k_vals*linear_tophat_k_vals*2/N),
+	Eigen::ArrayXd linear_recovered_convolved_tophat_vals = IceBRG::inverse_Fourier_transform(
+			static_cast<IceBRG::complex_array_type>(linear_tophat_k_vals*linear_tophat_k_vals*2/N),
 			wisdom)*scale;
 
 	result_array.insert_col(std::make_pair("linear_Gaussian_k_vals_real",linear_Gaussian_k_vals.real()));
@@ -90,17 +90,17 @@ int main( const int argc, const char *argv[] )
 
 	// Set up spherical vectors now
 	Eigen::ArrayXd r_vals = Eigen::ArrayXd::LinSpaced(N,0,scale) + scale/(2*(N-1));
-	brgastro::radial_vector spherical_input_Gaussian_vals(r_vals.unaryExpr(get_spherical_Gaus),
+	IceBRG::radial_vector spherical_input_Gaussian_vals(r_vals.unaryExpr(get_spherical_Gaus),
 			scale,wisdom);
-	brgastro::radial_vector spherical_input_tophat_vals(r_vals.unaryExpr(get_spherical_tophat),
+	IceBRG::radial_vector spherical_input_tophat_vals(r_vals.unaryExpr(get_spherical_tophat),
 			scale,wisdom);
-	brgastro::radial_vector expected_spherical_convolved_Gaussian_vals(
+	IceBRG::radial_vector expected_spherical_convolved_Gaussian_vals(
 			r_vals.unaryExpr(get_spherical_Gaus_rt2),scale,wisdom);
 
 	// Get rescaled versions
-	brgastro::radial_vector rescaled_spherical_input_Gaussian_vals(
+	IceBRG::radial_vector rescaled_spherical_input_Gaussian_vals(
 			spherical_input_Gaussian_vals.get_rescaled(new_scale,new_N));
-	brgastro::radial_vector rescaled_spherical_input_tophat_vals(
+	IceBRG::radial_vector rescaled_spherical_input_tophat_vals(
 			spherical_input_tophat_vals.get_rescaled(new_scale,new_N));
 
 	result_array.insert_col(std::make_pair("r_vals",r_vals));
@@ -115,9 +115,9 @@ int main( const int argc, const char *argv[] )
 	result_array.insert_col(std::make_pair("spherical_input_tophat_k_vals",spherical_input_tophat_vals.get_k_array()));
 	result_array.insert_col(std::make_pair("expected_spherical_convolved_Gaussian_k_vals",expected_spherical_convolved_Gaussian_vals.get_k_array()));
 
-	brgastro::radial_vector spherical_recovered_convolved_Gaussian_vals(
+	IceBRG::radial_vector spherical_recovered_convolved_Gaussian_vals(
 			spherical_input_Gaussian_vals.get_convolved_with(rescaled_spherical_input_Gaussian_vals));
-	brgastro::radial_vector spherical_recovered_convolved_tophat_vals(
+	IceBRG::radial_vector spherical_recovered_convolved_tophat_vals(
 			spherical_input_tophat_vals.get_convolved_with(rescaled_spherical_input_tophat_vals));
 
 	std::cout << (spherical_input_Gaussian_vals.get_r_array()
@@ -136,16 +136,16 @@ int main( const int argc, const char *argv[] )
 	result_array.insert_col(std::make_pair("spherical_recovered_convolved_Gaussian_vals",spherical_recovered_convolved_Gaussian_vals.get_r_array()));
 	result_array.insert_col(std::make_pair("spherical_recovered_convolved_tophat_vals",spherical_recovered_convolved_tophat_vals.get_r_array()));
 
-//	output_vals = brgastro::Fourier_sin_transform(get_Gaus,max,N,wisdom);
+//	output_vals = IceBRG::Fourier_sin_transform(get_Gaus,max,N,wisdom);
 //
-//	linear_recovered_input_vals = brgastro::inverse_Fourier_sin_transform(
+//	linear_recovered_input_vals = IceBRG::inverse_Fourier_sin_transform(
 //			static_cast<Eigen::ArrayXd>(output_vals*output_vals/(N*N)),wisdom)*max;
 //
 //	std::cout << (linear_recovered_input_vals/expected_convolved_Gaussian_vals).transpose() << std::endl;
 //
 //	result_array.insert_col(std::make_pair("sin_recovered_convolved_input_vals",linear_recovered_input_vals));
 
-	result_array.save("results.dat");
+	result_array.write("results.dat");
 
 	std::cout << "Done!\n";
 }

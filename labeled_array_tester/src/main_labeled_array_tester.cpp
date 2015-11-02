@@ -28,9 +28,10 @@
 #include <string>
 #include <vector>
 
-#include <Eigen/Core>
+#include "IceBRG_main/Eigen.hpp"
 
-#include "brg/container/labeled_array.hpp"
+#include "IceBRG_main/container/labeled_array.hpp"
+#include "IceBRG_main/file_access/table_formats/binary_format.hpp"
 
 /**
  * TODO (description)
@@ -40,7 +41,8 @@
  */
 int main( const int argc, const char *argv[] )
 {
-	
+
+	typedef IceBRG::labeled_array<double,Eigen::RowMajor> labeled_array_type;
 
 	std::vector<std::vector<double>> rows;
 	rows.push_back(std::vector<double>({1,4}));
@@ -48,7 +50,7 @@ int main( const int argc, const char *argv[] )
 
 	std::vector<std::string> header({"col_A","col_2"});
 
-	brgastro::labeled_array<double,Eigen::RowMajor> test_array(rows,header);
+	labeled_array_type test_array(rows,header);
 
 	test_array.insert_row(std::vector<double>({3,6}));
 	test_array.insert_col(std::vector<double>({7,8,9}));
@@ -217,7 +219,22 @@ int main( const int argc, const char *argv[] )
 
 	std::cout << std::endl;
 
-	std::cout << test_array.base();
+	std::cout << test_array.base() << std::endl;
+
+	test_array.write(std::cout,false);
+
+	test_array.write(std::cout,true);
+
+	// Test output to/input from stream in binary format
+	std::string filename("test_save.bin");
+
+	test_array.write<IceBRG::binary_format<labeled_array_type>>(filename);
+
+	labeled_array_type new_test_array;
+
+	new_test_array.read<IceBRG::binary_format<labeled_array_type>>(filename);
+
+	new_test_array.write(std::cout,true);
 
 	return 0;
 }

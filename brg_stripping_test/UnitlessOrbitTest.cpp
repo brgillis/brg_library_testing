@@ -7,16 +7,16 @@
 #include <new>
 #include <fstream>
 
-#include "brg/global.h"
+#include "IceBRG_main/global.h"
 
-#include "brg/math/calculus/DE.hpp"
-#include "brg/physics/astro.h"
-#include "brg/physics/SALTSA/stripping_orbit.h"
-#include "brg/physics/density_profile/density_profile.h"
-#include "brg/physics/density_profile/density_profile_functors.h"
-#include "brg/physics/density_profile/tNFW_profile.h"
-#include "brg/physics/density_profile/point_mass_profile.h"
-#include "brg/physics/units/unit_conversions.hpp"
+#include "IceBRG_main/math/calculus/DE.hpp"
+#include "IceBRG_main/physics/astro.h"
+#include "IceBRG_main/physics/SALTSA/stripping_orbit.h"
+#include "IceBRG_main/physics/density_profile/density_profile.h"
+#include "IceBRG_main/physics/density_profile/density_profile_functors.h"
+#include "IceBRG_main/physics/density_profile/tNFW_profile.h"
+#include "IceBRG_main/physics/density_profile/point_mass_profile.h"
+#include "IceBRG_main/physics/units/unit_conversions.hpp"
 
 int main( const int argc, const char *argv[] )
 {
