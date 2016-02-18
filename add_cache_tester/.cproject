@@ -114,6 +114,9 @@
 								<option id="gnu.cpp.compiler.option.other.other.434292005" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fopenmp --std=c++11" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.dialect.std.393261994" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.optimization.flags.1779821708" name="Other optimization flags" superClass="gnu.cpp.compiler.option.optimization.flags" value="-fopenmp -funroll-loops -march=native -mfpmath=sse" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1141102196" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="NDEBUG"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2072641447" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.release.2126013844" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.release">
@@ -199,4 +202,5 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
